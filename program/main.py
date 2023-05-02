@@ -58,7 +58,7 @@ if __name__ == "__main__":
    
    
   # Correr constantemente 
-  while true:
+  while True:
  
     # Place trades for opening positions
     if MANAGE_EXITS:
