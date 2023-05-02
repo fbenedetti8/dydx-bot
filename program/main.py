@@ -11,11 +11,15 @@ from func_messaging import send_message
 # MAIN FUNCTION
 if __name__ == "__main__":
   
+  # Mensaje al comenzar
+  send_message("Bot activado!")
+  
   # Connect to client 
   try:
     client = connect_dydx()
   except Exception as e:
     print("Error conectado al cliente ", e)
+    send_message(f"Error al conectar con dydx {e}")
     exit(1)
     
   # Abort all open positions
@@ -25,16 +29,19 @@ if __name__ == "__main__":
       close_orders = abort_all_positions(client)
     except Exception as e:
       print("Fallo cerrar posiciones! ", e)
+      send_message(f"Error al Cerrar pociciones {e}")
       exit(1)
   
   # Find Cointegrated Pairs
   if FIND_COINTEGRATED:
+    
     # Construct Market prices
     try:
       print("Fetching market prices, puede tardar 3 mins...")
       df_market_prices = construct_market_prices(client)
     except Exception as e:
       print("Fallo en market prices! ", e)
+      send_message(f"Error construyendo el market prices {e}")
       exit(1)
       
     # Store Cointegrated Pairs  
@@ -46,6 +53,7 @@ if __name__ == "__main__":
         exit(1)
     except Exception as e:
       print("Error Guardando Pares! ", e)
+      send_message(f"Error al guardar los pares: {e}")
       exit(1)
    
    
@@ -60,6 +68,7 @@ if __name__ == "__main__":
         
       except Exception as e:
         print("Error manegando trades existentes! ", e)
+        send_message(f"Error manegando trades existentes: {e}")
         exit(1)
       
     
@@ -67,8 +76,8 @@ if __name__ == "__main__":
     if PLACE_TRADES:
       try:
         print("Encontrando oportunidades de trading...")
-        open_positions(client)
-        
+        open_positions(client)   
       except Exception as e:
         print("Error buscando oportunidades de trade! ", e)
+        send_message(f"Error abriendo pociciones o oportunidades de trade: {e}")
         exit(1)
