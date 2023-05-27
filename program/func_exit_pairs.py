@@ -3,6 +3,7 @@ from func_utils import format_number
 from func_public import get_candles_recent
 from func_cointegration import calculate_zscore
 from func_private import place_market_order
+from func_messaging import send_message
 import json
 import time
 
@@ -161,11 +162,19 @@ def manage_trade_exits(client):
           reduce_only=True,
         )
 
-        print(close_order_m1["order"]["id"])
         print(">>> Closing <<<")
 
         # Protect API
         time.sleep(1)
+
+        position_close = client.private.get_positions(
+          market=position_market_m1,
+          status="CLOSED",
+          limit=1
+          #createdBeforeOrAt=close_order_m1["order"]["createdAt"]
+        )   
+
+        send_message(f"Priemera orden cerrada con beneficio: {position_close.data['positions'][0]['realizedPnl']}" )
 
         # Close position for market 2
         print(">>> Closing market 2 <<<")

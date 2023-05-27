@@ -77,7 +77,7 @@ class BotAgent:
 
     # Guard: If order cancelled move onto next Pair
     if order_status == "CANCELED":
-      print(f"{self.market_1} vs {self.market_2} - Order cancelled...")
+      print(f"{self.market_1} vs {self.market_2} - Order cancelled1...")
       self.order_dict["pair_status"] = "FAILED"
       return "failed"
 
@@ -88,7 +88,7 @@ class BotAgent:
 
       # Guard: If order cancelled move onto next Pair
       if order_status == "CANCELED":
-        print(f"{self.market_1} vs {self.market_2} - Order cancelled...")
+        print(f"{self.market_1} vs {self.market_2} - Order cancelled2...")
         self.order_dict["pair_status"] = "FAILED"
         return "failed"
 
@@ -189,28 +189,26 @@ class BotAgent:
         if order_status_close_order != "FILLED":
           print("ABORT PROGRAM")
           print("Unexpected Error")
-          print(order_status_close_order)
-
           # Send Message
           send_message("Failed to execute. Code red. Error code: 100")
-
           # ABORT
           exit(1)
       except Exception as e:
-        self.order_dict["pair_status"] = "ERROR"
-        self.order_dict["comments"] = f"Close Market 1 {self.market_1}: , {e}"
         print("ABORT PROGRAM")
         print("Unexpected Error")
-        print(order_status_close_order)
-
+        self.order_dict["pair_status"] = "ERROR"
+        self.order_dict["comments"] = f"Close Market 1 {self.market_1}: , {e}"
         # Send Message
         send_message("Failed to execute. Code red. Error code: 101")
-
         # ABORT
         exit(1)
+        
+      return 'failed'
 
     # Return success result
     else:
       self.order_dict["pair_status"] = "LIVE"
+      # Telegram Mensaje
+      send_message(f"Se abrieron 2 pocisiones Cointegradas: {self.order_dict['market_1']} {self.order_dict['order_m1_side']} vs {self.order_dict['market_2']} {self.order_dict['order_m2_side']}" )
       return self.order_dict
       

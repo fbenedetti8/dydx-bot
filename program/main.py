@@ -1,4 +1,4 @@
-from constants import ABORT_ALL_POSITIONS, FIND_COINTEGRATED, PLACE_TRADES, MANAGE_EXITS
+from constants import ABORT_ALL_POSITIONS, FIND_COINTEGRATED, PLACE_TRADES, MANAGE_EXITS, STOP_PROGRAM
 from func_connections import connect_dydx
 from func_private import abort_all_positions
 from func_public import construct_market_prices
@@ -14,6 +14,11 @@ if __name__ == "__main__":
   # Mensaje al comenzar
   send_message("Bot activado!")
   
+  # Finalizar app
+  if STOP_PROGRAM:
+    print('Fin.')
+    pass
+  
   # Connect to client 
   try:
     client = connect_dydx()
@@ -27,6 +32,8 @@ if __name__ == "__main__":
     try:
       print("Cerrando posiciones...")
       close_orders = abort_all_positions(client)
+      if(close_orders):
+        send_message(f"Todas las pocisiones fueron cerradas en total: {len(close_orders)}")
     except Exception as e:
       print("Fallo cerrar posiciones! ", e)
       send_message(f"Error al Cerrar pociciones {e}")
@@ -59,13 +66,17 @@ if __name__ == "__main__":
    
   # Correr constantemente 
   while True:
+
+    # Finalizar app
+    if STOP_PROGRAM:
+      pass
  
     # Place trades for opening positions
     if MANAGE_EXITS:
       try:
         print("Manegando trades existentes...")
-        manage_trade_exits(client)
-        
+        status = manage_trade_exits(client)
+        print(status)
       except Exception as e:
         print("Error manegando trades existentes! ", e)
         send_message(f"Error manegando trades existentes: {e}")

@@ -4,6 +4,9 @@ from decouple import config
 # !!!! SELECT MODE !!!!
 MODE = "DEVELOPMENT" # "PRODUCTION"
 
+# Stop program
+STOP_PROGRAM = True
+
 # Close all open positions and orders
 ABORT_ALL_POSITIONS = False
 
