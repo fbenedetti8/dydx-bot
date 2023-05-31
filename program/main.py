@@ -5,19 +5,17 @@ from func_public import construct_market_prices
 from func_cointegration import store_cointegration_results
 from func_entry_pairs import open_positions
 from func_exit_pairs import manage_trade_exits
-from func_messaging import send_message
+from func_messaging import send_message, listen_telegram_messages
+from threading import Thread
 
 
-# MAIN FUNCTION
-if __name__ == "__main__":
-  
-  # Mensaje al comenzar
-  send_message("Bot activado!")
+
+def run():
   
   # Finalizar app
-  if STOP_PROGRAM:
-    print('Fin.')
-    pass
+  if STOP_PROGRAM.is_set():
+    send_message(f"Bot detenido con exito!")
+    return
   
   # Connect to client 
   try:
@@ -68,8 +66,9 @@ if __name__ == "__main__":
   while True:
 
     # Finalizar app
-    if STOP_PROGRAM:
-      pass
+    if STOP_PROGRAM.is_set():
+      send_message(f"Bot detenido con exito!")
+      return
  
     # Place trades for opening positions
     if MANAGE_EXITS:
@@ -92,3 +91,17 @@ if __name__ == "__main__":
         print("Error buscando oportunidades de trade! ", e)
         send_message(f"Error abriendo pociciones o oportunidades de trade: {e}")
         exit(1)
+        
+      
+  
+# MAIN FUNCTION
+if __name__ == "__main__":
+  
+  # Mensaje al comenzar
+  send_message("Bot activado!")
+  
+  # Run app
+  program_thread = Thread(target=run, daemon=True).start()
+  
+  listen_telegram_messages()
+  

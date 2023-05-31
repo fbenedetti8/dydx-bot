@@ -172,9 +172,13 @@ def manage_trade_exits(client):
           status="CLOSED",
           limit=1
           #createdBeforeOrAt=close_order_m1["order"]["createdAt"]
-        )   
-
-        send_message(f"Priemera orden cerrada con beneficio: {position_close.data['positions'][0]['realizedPnl']}" )
+        )  
+        
+        realized_pnl = position_close.data['positions'][0]['realizedPnl']
+        send_message(f"Priemera orden cerrada: {position_market_m1} {realized_pnl}")
+        
+        # Protect API
+        time.sleep(1)
 
         # Close position for market 2
         print(">>> Closing market 2 <<<")
@@ -189,8 +193,21 @@ def manage_trade_exits(client):
           reduce_only=True,
         )
 
-        print(close_order_m2["order"]["id"])
         print(">>> Closing <<<")
+        
+        position_close = client.private.get_positions(
+          market=position_market_m2,
+          status="CLOSED",
+          limit=1
+          #createdBeforeOrAt=close_order_m1["order"]["createdAt"]
+        ) 
+        
+        realized_pnl = position_close.data['positions'][0]['realizedPnl']
+        send_message(f"Priemera orden cerrada: {position_market_m2} {realized_pnl}")
+        
+        # Protect API
+        time.sleep(1)
+        
 
       except Exception as e:
         print(f"Exit failed for {position_market_m1} with {position_market_m2}")

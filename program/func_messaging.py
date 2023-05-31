@@ -6,22 +6,23 @@ from constants import STOP_PROGRAM
 
 
 
-
-
+# start 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  STOP_PROGRAM.clear()
   await context.bot.send_message(
       chat_id=update.effective_chat.id,
       text="Bot activado por Telegram!"
   )
-  
 
-async def exit_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-  STOP_PROGRAM = True
+# Finalizar programa
+async def stop_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  STOP_PROGRAM.set()
   await context.bot.send_message(
       chat_id=update.effective_chat.id,
-      text="El bot fue detenido con exito!"
+      text="Detenido bot ..."
   )
       
+# Mensaje de error
 async def error_callback(update, context):
   print('Error en telegram!')
   await context.bot.send_message(
@@ -30,16 +31,16 @@ async def error_callback(update, context):
   )
 
 
-if __name__ == '__main__':
+# Escuchar Comandos de telegram
+def listen_telegram_messages():
   bot_token = config("TELEGRAM_TOKEN")
   application = ApplicationBuilder().token(bot_token).build()
 
   application.add_handler(CommandHandler('start', start_command))
-  application.add_handler(CommandHandler('exit', exit_command))
+  application.add_handler(CommandHandler('stop', stop_command))
   application.add_error_handler(error_callback)
-  
-  application.run_polling()
 
+  application.run_polling()
 
 
 # Send Message
