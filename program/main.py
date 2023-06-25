@@ -14,6 +14,7 @@ def run():
   
   # Finalizar app
   if STOP_PROGRAM.is_set():
+    print("Bot detenido!")
     send_message(f"Bot detenido con exito!")
     return
   
@@ -31,7 +32,7 @@ def run():
       print("Cerrando posiciones...")
       close_orders = abort_all_positions(client)
       if(close_orders):
-        send_message(f"Todas las pocisiones fueron cerradas en total: {len(close_orders)}")
+        send_message(f"Todas las posiciones fueron cerradas, en total: {len(close_orders)}")
     except Exception as e:
       print("Fallo cerrar posiciones! ", e)
       send_message(f"Error al Cerrar pociciones {e}")
@@ -67,6 +68,7 @@ def run():
 
     # Finalizar app
     if STOP_PROGRAM.is_set():
+      print("Bot detenido!")
       send_message(f"Bot detenido con exito!")
       return
  

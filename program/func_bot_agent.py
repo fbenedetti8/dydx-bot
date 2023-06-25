@@ -209,6 +209,6 @@ class BotAgent:
     else:
       self.order_dict["pair_status"] = "LIVE"
       # Telegram Mensaje
-      send_message(f"Se abrieron 2 pocisiones Cointegradas: {self.order_dict['market_1']} {self.order_dict['order_m1_side']} vs {self.order_dict['market_2']} {self.order_dict['order_m2_side']}" )
+      send_message(f"Se abrieron 2 posiciones Cointegradas: {self.order_dict['market_1']} {self.order_dict['order_m1_side']} vs {self.order_dict['market_2']} {self.order_dict['order_m2_side']}" )
       return self.order_dict
       

@@ -19,7 +19,7 @@ async def stop_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
   STOP_PROGRAM.set()
   await context.bot.send_message(
       chat_id=update.effective_chat.id,
-      text="Detenido bot ..."
+      text="Deteniendo bot ..."
   )
       
 # Mensaje de error
