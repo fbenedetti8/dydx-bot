@@ -160,10 +160,33 @@ class BotAgent:
       self.order_dict["order_id_m2"] = quote_order["order"]["id"]
       self.order_dict["order_time_m2"] = datetime.now().isoformat()
     except Exception as e:
-      self.order_dict["pair_status"] = "ERROR"
-      self.order_dict["comments"] = f"Market 2 {self.market_2}: , {e}"
-      return self.order_dict
+      # Close first position
+      try:
+        print(">>> Fallo segundo par <<<")
+        print(f">>> Cerrando primer par {self.market_1} <<<")
 
+        base_order = place_market_order(
+          self.client,
+          market=self.market_1,
+          side=self.quote_side,
+          size=self.base_size,
+          price=self.base_price,
+          reduce_only=False
+        )
+        # Store the order id
+        self.order_dict["order_id_m1"] = base_order["order"]["id"]
+        self.order_dict["order_time_m1"] = datetime.now().isoformat()
+        
+        self.order_dict["pair_status"] = "ERROR"
+        self.order_dict["comments"] = f"Market 2 {self.market_2}: , {e}"
+        return self.order_dict
+        
+      except Exception as e:
+        self.order_dict["pair_status"] = "ERROR"
+        self.order_dict["comments"] = f"Error al cerrar primera posicion {self.market_1}: , {e}"
+        return self.order_dict 
+
+  
     # Ensure order is live before processing
     order_status_m2 = self.check_order_status_by_id(self.order_dict["order_id_m2"])
 
